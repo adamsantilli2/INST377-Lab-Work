@@ -1,1 +1,47 @@
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .wrapper {
+    display:flex;
+    flex-direction: column;
+    font-family: ‘Segoe UI’, Candara, ‘Bitstream Vera Sans’, ‘DejaVu Sans’, ‘Bitsream Vera Sans’, ‘Trebuchet MS’, Verdana, ‘Verdana Ref’, sans-serif;
+  }
+  
+  .menu-container {
+    display: flex;
+    color: #fff;
+    background-color: #5995DA;  /* Blue */
+    padding: 20px 0;
+    justify-content: center;
+  }
+  .menu-container2 {
+    display: flex;
+    color: #fff;
+    background-color: #5995DA;  /* Blue */
+    justify-content: flex-end;
+  }
+  .menu2 {
+    display: flex;
+    border: 1px solid #fff;
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .menu {
+    display: flex;
+    border: 1px solid #fff;
+    width: 900px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .title{
+    display: flex;
+    background-color: rgba(0,139, 139,0.8);
+    padding: 10px 15px;
+  }
+  
