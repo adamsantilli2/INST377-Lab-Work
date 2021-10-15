@@ -1,0 +1,74 @@
+function mapInit() {
+  const mymap = L.map('mapid').setView([38.9897, -76.937759], 13);
+
+  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox/streets-v11',
+    tileSize: 512,
+    zoomOffset: -1,
+    accessToken: 'pk.eyJ1IjoidGhlY2hhaXJtYW4yIiwiYSI6ImNrdXJnaXh2cTU0bDMycXE2cWNucm9hNzYifQ.0MuNWq4gmHNWteamsYaPcw'
+  }).addTo(mymap);
+  return mymap;
+}
+
+async function dataHandler() {
+  const endpoint = 'https://data.princegeorgescountymd.gov/resource/umjn-t2iz.json';
+
+  const request = await fetch(endpoint);
+
+  const locations = await request.json();
+
+  function findMatches(wordToMatch, locations) {
+    return locations.filter((place) => {
+      const regex = new RegExp(wordToMatch, 'gi');
+      return place.zip.match(regex);
+    });
+  }
+
+  function displayMatches(event) {
+    const matchArray = findMatches(event.target.value, locations);
+    let testArray = matchArray.filter((obj) => Object.keys(obj).includes('geocoded_column_1'));
+    testArray = testArray.slice(0, 5);
+    const html = testArray.map((place) => `          
+                  <li>
+                  <div class="box">                        
+                        <span class="name"><strong>${place.name}</strong></span><br>
+                        <span class="address"><em>${place.address_line_1}</em></span><br>
+                        </div>
+                  </li>
+              `).join('');
+    suggestions.innerHTML = html;
+  }
+
+  const suggestions = document.querySelector('.suggestions');
+
+  // searchInput.addEventListener('change', displayMatches);
+  // searchInput.addEventListener('input', displayMatches);
+  const input = document.querySelector('input');
+
+  input.addEventListener('input', displayMatches);
+}
+
+async function windowActions() {
+  const mymap = mapInit();
+  await dataHandler(mymap);
+}
+
+window.onload = windowActions;
+
+// function displayMatches(event) {
+//  const matchArray = findMatches(event.target.value, locations);
+//  const html = matchArray.map((place) => {
+//   const regex = new RegExp(event.target.value, 'gi');
+//    return `
+//                   <li>
+//                       <span class="name"><strong>${place.name}</strong></span><br>
+//                       <span class="address"><em>${place.address_line_1}</em></span><br>
+//                   </li>
+//              `;
+// }).join('');
+/// suggestions.innerHTML = html;
+// }
+// make a 3 line windows action async fxn with mapinit and await dataHandler
+// most things in datahandler
