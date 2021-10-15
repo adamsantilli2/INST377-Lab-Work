@@ -12,7 +12,7 @@ function mapInit() {
   return mymap;
 }
 
-async function dataHandler() {
+async function dataHandler(mapObject) {
   const endpoint = 'https://data.princegeorgescountymd.gov/resource/umjn-t2iz.json';
 
   const request = await fetch(endpoint);
@@ -26,8 +26,38 @@ async function dataHandler() {
     });
   }
 
-  function displayMatches(event) {
-    const matchArray = findMatches(event.target.value, locations);
+  function clearResults(array) {
+    array.slice(0, 0);
+  }
+
+  function applyMapMarkers(mymap, testArray) {
+    mymap.eachLayer((layer) => {
+      mymap.removeLayer(layer);
+    });
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 18,
+      id: 'mapbox/streets-v11',
+      tileSize: 512,
+      zoomOffset: -1,
+      accessToken: 'pk.eyJ1IjoidGhlY2hhaXJtYW4yIiwiYSI6ImNrdXJnaXh2cTU0bDMycXE2cWNucm9hNzYifQ.0MuNWq4gmHNWteamsYaPcw'
+    }).addTo(mymap);
+    mymap.setView([testArray[0].geocoded_column_1.coordinates[1],
+      testArray[0].geocoded_column_1.coordinates[0]]);
+    L.marker([testArray[0].geocoded_column_1.coordinates[1],
+      testArray[0].geocoded_column_1.coordinates[0]]).addTo(mymap);
+    L.marker([testArray[1].geocoded_column_1.coordinates[1],
+      testArray[1].geocoded_column_1.coordinates[0]]).addTo(mymap);
+    L.marker([testArray[2].geocoded_column_1.coordinates[1],
+      testArray[2].geocoded_column_1.coordinates[0]]).addTo(mymap);
+    L.marker([testArray[3].geocoded_column_1.coordinates[1],
+      testArray[3].geocoded_column_1.coordinates[0]]).addTo(mymap);
+    L.marker([testArray[4].geocoded_column_1.coordinates[1],
+      testArray[4].geocoded_column_1.coordinates[0]]).addTo(mymap);
+  }
+
+  function displayMatches() {
+    const matchArray = findMatches(target.value, locations);
     let testArray = matchArray.filter((obj) => Object.keys(obj).includes('geocoded_column_1'));
     testArray = testArray.slice(0, 5);
     const html = testArray.map((place) => `          
@@ -39,6 +69,7 @@ async function dataHandler() {
                   </li>
               `).join('');
     suggestions.innerHTML = html;
+    applyMapMarkers(mapObject, testArray);
   }
 
   const suggestions = document.querySelector('.suggestions');
