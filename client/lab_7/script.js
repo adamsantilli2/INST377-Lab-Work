@@ -26,10 +26,6 @@ async function dataHandler(mapObject) {
     });
   }
 
-  function clearResults(array) {
-    array.slice(0, 0);
-  }
-
   function applyMapMarkers(mymap, testArray) {
     mymap.eachLayer((layer) => {
       mymap.removeLayer(layer);
@@ -57,7 +53,7 @@ async function dataHandler(mapObject) {
   }
 
   function displayMatches() {
-    const matchArray = findMatches(target.value, locations);
+    const matchArray = findMatches(event.target.value, locations);
     let testArray = matchArray.filter((obj) => Object.keys(obj).includes('geocoded_column_1'));
     testArray = testArray.slice(0, 5);
     const html = testArray.map((place) => `          
