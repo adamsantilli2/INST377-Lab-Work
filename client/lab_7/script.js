@@ -19,6 +19,9 @@ async function dataHandler(mapObject) {
 
   const locations = await request.json();
 
+  const suggestions = document.querySelector('.suggestions');
+  const input = document.querySelector('input');
+
   function findMatches(wordToMatch, locations) {
     return locations.filter((place) => {
       const regex = new RegExp(wordToMatch, 'gi');
@@ -26,7 +29,7 @@ async function dataHandler(mapObject) {
     });
   }
 
-  function applyMapMarkers(mymap, testArray) {
+  function applyMarkers(mymap, testArray) {
     mymap.eachLayer((layer) => {
       mymap.removeLayer(layer);
     });
@@ -52,11 +55,32 @@ async function dataHandler(mapObject) {
       testArray[4].geocoded_column_1.coordinates[0]]).addTo(mymap);
   }
 
-  function displayMatches() {
-    const matchArray = findMatches(event.target.value, locations);
-    let testArray = matchArray.filter((obj) => Object.keys(obj).includes('geocoded_column_1'));
-    testArray = testArray.slice(0, 5);
-    const html = testArray.map((place) => `          
+  function clearMarkers(mymap) {
+    mymap.eachLayer((layer) => {
+      mymap.removeLayer(layer);
+    });
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 18,
+      id: 'mapbox/streets-v11',
+      tileSize: 512,
+      zoomOffset: -1,
+      accessToken: 'pk.eyJ1IjoidGhlY2hhaXJtYW4yIiwiYSI6ImNrdXJnaXh2cTU0bDMycXE2cWNucm9hNzYifQ.0MuNWq4gmHNWteamsYaPcw'
+    }).addTo(mymap);
+    mymap.setView([38.9897, -76.937759]);
+  }
+
+  function displayMatches(event) {
+    if (event.target.value === '') {
+      const testArray = [];
+      const html = testArray;
+      suggestions.html = html;
+      clearMarkers(mapObject);
+    } else {
+      const matchArray = findMatches(event.target.value, locations);
+      let testArray = matchArray.filter((obj) => Object.keys(obj).includes('geocoded_column_1'));
+      testArray = testArray.slice(0, 5);
+      const html = testArray.map((place) => `          
                   <li>
                   <div class="box">                        
                         <span class="name"><strong>${place.name}</strong></span><br>
@@ -64,17 +88,13 @@ async function dataHandler(mapObject) {
                         </div>
                   </li>
               `).join('');
-    suggestions.innerHTML = html;
-    applyMapMarkers(mapObject, testArray);
+
+      suggestions.innerHTML = html;
+      applyMarkers(mapObject, testArray);
+    }
   }
 
-  const suggestions = document.querySelector('.suggestions');
-
-  // searchInput.addEventListener('change', displayMatches);
-  // searchInput.addEventListener('input', displayMatches);
-  const input = document.querySelector('input');
-
-  input.addEventListener('input', displayMatches);
+  input.addEventListener('input', (evt) => { displayMatches(evt); });
 }
 
 async function windowActions() {
