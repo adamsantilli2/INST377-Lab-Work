@@ -30,9 +30,6 @@ async function dataHandler(mapObject) {
   }
 
   function applyMarkers(mymap, testArray) {
-    mymap.eachLayer((layer) => {
-      mymap.removeLayer(layer);
-    });
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 18,
@@ -72,9 +69,7 @@ async function dataHandler(mapObject) {
 
   function displayMatches(event) {
     if (event.target.value === '') {
-      const testArray = [];
-      const html = testArray;
-      suggestions.html = html;
+      suggestions.innerHTML = [];
       clearMarkers(mapObject);
     } else {
       const matchArray = findMatches(event.target.value, locations);
