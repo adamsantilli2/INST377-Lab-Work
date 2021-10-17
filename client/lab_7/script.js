@@ -29,7 +29,23 @@ async function dataHandler(mapObject) {
     });
   }
 
+  function clearMarkers(mymap) {
+    mymap.eachLayer((layer) => {
+      mymap.removeLayer(layer);
+    });
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 18,
+      id: 'mapbox/streets-v11',
+      tileSize: 512,
+      zoomOffset: -1,
+      accessToken: 'pk.eyJ1IjoidGhlY2hhaXJtYW4yIiwiYSI6ImNrdXJnaXh2cTU0bDMycXE2cWNucm9hNzYifQ.0MuNWq4gmHNWteamsYaPcw'
+    }).addTo(mymap);
+    mymap.setView([38.9897, -76.937759]);
+  }
+
   function applyMarkers(mymap, testArray) {
+    clearMarkers(mymap);
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 18,
@@ -50,28 +66,18 @@ async function dataHandler(mapObject) {
       testArray[3].geocoded_column_1.coordinates[0]]).addTo(mymap);
     L.marker([testArray[4].geocoded_column_1.coordinates[1],
       testArray[4].geocoded_column_1.coordinates[0]]).addTo(mymap);
-  }
-
-  function clearMarkers(mymap) {
-    mymap.eachLayer((layer) => {
-      mymap.removeLayer(layer);
-    });
-    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-      maxZoom: 18,
-      id: 'mapbox/streets-v11',
-      tileSize: 512,
-      zoomOffset: -1,
-      accessToken: 'pk.eyJ1IjoidGhlY2hhaXJtYW4yIiwiYSI6ImNrdXJnaXh2cTU0bDMycXE2cWNucm9hNzYifQ.0MuNWq4gmHNWteamsYaPcw'
-    }).addTo(mymap);
-    mymap.setView([38.9897, -76.937759]);
+    console.log(testArray);
   }
 
   function displayMatches(event) {
+    // I kept checking for empty values even tho <5 covers it because its in the lab requirements
     if (event.target.value === '') {
       suggestions.innerHTML = [];
       clearMarkers(mapObject);
-    } else {
+    } if (event.target.value.length < 5) {
+      suggestions.innerHTML = [];
+      clearMarkers(mapObject);
+    } if (event.target.value.length === 5) {
       const matchArray = findMatches(event.target.value, locations);
       let testArray = matchArray.filter((obj) => Object.keys(obj).includes('geocoded_column_1'));
       testArray = testArray.slice(0, 5);
@@ -86,6 +92,8 @@ async function dataHandler(mapObject) {
 
       suggestions.innerHTML = html;
       applyMarkers(mapObject, testArray);
+    } else {
+      console.log('Waiting for Zip Code');
     }
   }
 
