@@ -71,10 +71,7 @@ async function dataHandler(mapObject) {
 
   function displayMatches(event) {
     // I kept checking for empty values even tho <5 covers it because its in the lab requirements
-    if (event.target.value === '') {
-      suggestions.innerHTML = [];
-      clearMarkers(mapObject);
-    } if (event.target.value.length < 5) {
+    if (event.target.value === '' || event.target.value.length < 5) {
       suggestions.innerHTML = [];
       clearMarkers(mapObject);
     } if (event.target.value.length === 5) {
@@ -93,7 +90,7 @@ async function dataHandler(mapObject) {
       suggestions.innerHTML = html;
       applyMarkers(mapObject, testArray);
     } else {
-      console.log('Waiting for Zip Code');
+      console.log('Waiting for valid Zip Code');
     }
   }
 
