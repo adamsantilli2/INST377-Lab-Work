@@ -103,19 +103,3 @@ async function windowActions() {
 }
 
 window.onload = windowActions;
-
-// function displayMatches(event) {
-//  const matchArray = findMatches(event.target.value, locations);
-//  const html = matchArray.map((place) => {
-//   const regex = new RegExp(event.target.value, 'gi');
-//    return `
-//                   <li>
-//                       <span class="name"><strong>${place.name}</strong></span><br>
-//                       <span class="address"><em>${place.address_line_1}</em></span><br>
-//                   </li>
-//              `;
-// }).join('');
-/// suggestions.innerHTML = html;
-// }
-// make a 3 line windows action async fxn with mapinit and await dataHandler
-// most things in datahandler
