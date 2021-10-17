@@ -41,7 +41,7 @@ async function dataHandler(mapObject) {
       zoomOffset: -1,
       accessToken: 'pk.eyJ1IjoidGhlY2hhaXJtYW4yIiwiYSI6ImNrdXJnaXh2cTU0bDMycXE2cWNucm9hNzYifQ.0MuNWq4gmHNWteamsYaPcw'
     }).addTo(mymap);
-    mymap.setView([38.9897, -76.937759]);
+    mymap.setView([38.9897, -76.937759], 13);
   }
 
   function applyMarkers(mymap, testArray) {
@@ -55,7 +55,7 @@ async function dataHandler(mapObject) {
       accessToken: 'pk.eyJ1IjoidGhlY2hhaXJtYW4yIiwiYSI6ImNrdXJnaXh2cTU0bDMycXE2cWNucm9hNzYifQ.0MuNWq4gmHNWteamsYaPcw'
     }).addTo(mymap);
     mymap.setView([testArray[0].geocoded_column_1.coordinates[1],
-      testArray[0].geocoded_column_1.coordinates[0]]);
+      testArray[0].geocoded_column_1.coordinates[0]], 13);
     L.marker([testArray[0].geocoded_column_1.coordinates[1],
       testArray[0].geocoded_column_1.coordinates[0]]).addTo(mymap);
     L.marker([testArray[1].geocoded_column_1.coordinates[1],
